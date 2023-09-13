@@ -9,6 +9,6 @@ public interface CookbookService {
     Cookbook createCookbook(Cookbook cookbook);
     List<Cookbook> getCookbooks();
     Cookbook getCookbookbyId(Long id);
-    Cookbook updateCookbook(Cookbook cookbook, Long id);
+    Cookbook updateCookbook(Cookbook cookbook);
     void deleteCookbook(Long id);
 }

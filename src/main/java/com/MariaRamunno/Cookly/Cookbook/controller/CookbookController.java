@@ -3,6 +3,7 @@ package com.MariaRamunno.Cookly.Cookbook.controller;
 import com.MariaRamunno.Cookly.Cookbook.model.Cookbook;
 import com.MariaRamunno.Cookly.Cookbook.service.CookbookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,34 +13,38 @@ import java.util.List;
 @RestController
 @RequestMapping("/cookbooks")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class CookbookController {
 
-    private final CookbookService cookbookService;
+    @Autowired
+    private CookbookService cookbookService;
 
     @GetMapping
-    public ResponseEntity<List<Cookbook>> getCookbooks(){
-        return new ResponseEntity<>(cookbookService.getCookbooks(), HttpStatus.FOUND);
+    public List<Cookbook> getCookbooks(){
+        return cookbookService.getCookbooks();
     }
 
     @PostMapping
-    public Cookbook createCookbook(@RequestBody Cookbook cookbook){
-        return cookbookService.createCookbook(cookbook);
+    public ResponseEntity<Cookbook> createCookbook(@RequestBody Cookbook cookbook){
+        Cookbook createdCookbook = cookbookService.createCookbook(cookbook);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCookbook);
     }
 
-    @PutMapping("/update/{id}")
-    public Cookbook updateCookbook(@RequestBody Cookbook cookbook, @PathVariable Long id){
-        return cookbookService.updateCookbook(cookbook, id);
+    @PutMapping("/{id}")
+    public ResponseEntity<Cookbook> updateCookbook(@RequestBody Cookbook cookbook) {
+        Cookbook updatedCookbook = cookbookService.updateCookbook(cookbook);
+        return ResponseEntity.ok(updatedCookbook);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteCookbook(@PathVariable Long id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteCookbook(@PathVariable Long id){
         cookbookService.deleteCookbook(id);
+        return ResponseEntity.ok("Profile deleted successfully");
     }
 
     @GetMapping("/{id}")
-    public Cookbook getCookbookbyId(@PathVariable Long id){
-        return cookbookService.getCookbookbyId(id);
+    public ResponseEntity<Cookbook> getCookbookbyId(@PathVariable Long id){
+        Cookbook cookbook = cookbookService.getCookbookbyId(id);
+        return ResponseEntity.ok(cookbook);
     }
 
 }

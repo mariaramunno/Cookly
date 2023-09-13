@@ -63,9 +63,9 @@ public class CookbookServiceTests {
 
     @Test
     public void updateCookbookSuccess() {
-        BDDMockito.doReturn(Optional.of(mockCookbook1)).when(cookbookRepo).findById((Long) ArgumentMatchers.any());
+        BDDMockito.doReturn(Optional.of(mockCookbook1)).when(cookbookRepo).findById(1L);
 
-        Cookbook updatedCookbook = cookbookService.updateCookbook(inputCookbook, id1);
+        Cookbook updatedCookbook = cookbookService.updateCookbook(inputCookbook);
 
         Assertions.assertEquals(updatedCookbook, mockCookbook1);
     }

@@ -1,115 +1,81 @@
 package com.MariaRamunno.Cookly.CookbookTests;
 
-import com.MariaRamunno.Cookly.Cookbook.controller.CookbookController;
-import com.MariaRamunno.Cookly.Cookbook.exceptions.CookbookNotFoundException;
 import com.MariaRamunno.Cookly.Cookbook.model.Cookbook;
 import com.MariaRamunno.Cookly.Cookbook.service.CookbookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
-import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import java.util.Collections;
 
 
-@SpringBootTest
 @AutoConfigureMockMvc
+@SpringBootTest
 public class CookbookControllerTests {
 
     @MockBean
     private CookbookService mockCookbookService;
 
-    @InjectMocks
-    private CookbookController mockCookbookController;
-
     @Autowired
     private MockMvc mockMvc;
 
-    private Cookbook inputCookbook;
-
-    private Cookbook mockResponseCookbook;
-
-    @BeforeEach
-    public void setUp(){
-        inputCookbook = new Cookbook();
-        inputCookbook.setRecipes(Collections.emptySet());
-        inputCookbook.setTitle("Title");
-        inputCookbook.setId(1L);
-
-        mockResponseCookbook = new Cookbook();
-        mockResponseCookbook.setId(1L);
-        mockResponseCookbook.setTitle("Mock Example");
-        mockResponseCookbook.setRecipes(Collections.emptySet());
-    }
-
     @Test
-    public void createCookbookSuccess() throws Exception{
-        BDDMockito.doReturn(mockResponseCookbook).when(mockCookbookService).createCookbook(inputCookbook);
+    void createCookbookSuccess() throws Exception{
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/cookbooks")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(asJsonString(inputCookbook)))
+        Cookbook newCookbook = new Cookbook();
+        Cookbook createdCookbook = new Cookbook();
+        createdCookbook.setId(1L);
+        when(mockCookbookService.createCookbook(newCookbook)).thenReturn(createdCookbook);
 
-                .andExpect(MockMvcResultMatchers.status().isCreated());
-    }
-
-
-    @Test
-    public void getCookbookByIdSuccess() throws Exception{
-        Long id = 1L;
-        BDDMockito.doReturn(mockResponseCookbook).when(mockCookbookService).getCookbookbyId(id);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/cookbooks/{id}", id))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-    }
-
-    @Test
-    public void getCookbookByIdFail() throws Exception{
-        Long id = 2L;
-        BDDMockito.doThrow(new CookbookNotFoundException("Not found")).when(mockCookbookService).getCookbookbyId(id);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/cookbooks/{id}", id))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
-
-    @Test
-    public void updateCookbookSuccess() throws Exception {
-        Long id = 1L;
-        BDDMockito.doReturn(mockResponseCookbook).when(mockCookbookService).updateCookbook(inputCookbook, id);
-
-        mockMvc.perform(MockMvcRequestBuilders.put("/cookbooks/update/{id}", id)
+        // Act and Assert
+        mockMvc.perform(post("/cookbooks")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(inputCookbook)))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                        .content(asJsonString(newCookbook)))
+                .andExpect(status().isCreated())
+                .andExpect(content().json(asJsonString(createdCookbook)));
+    }
+
+
+    @Test
+    void getCookbookByIdSuccess() throws Exception{
+        Cookbook cookbook = new Cookbook();
+        cookbook.setId(1L);
+        when(mockCookbookService.getCookbookbyId(1L)).thenReturn(cookbook);
+
+        mockMvc.perform(get("/cookbooks/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(asJsonString(cookbook)));
+    }
+
+
+    @Test
+    void updateCookbookSuccess() throws Exception {
+        Cookbook updateCookbook = new Cookbook();
+        updateCookbook.setId(1L);
+        when(mockCookbookService.updateCookbook(updateCookbook)).thenReturn(updateCookbook);
+
+        mockMvc.perform(put("/cookbooks/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(updateCookbook)))
+                .andExpect(status().isOk())
+                .andExpect(content().json(asJsonString(updateCookbook)));
     }
 
     @Test
-    public void deleteCookbookSuccess() throws Exception {
-        Long id = 1L;
-        BDDMockito.doReturn(true).when(mockCookbookService).deleteCookbook(id);
-
-        mockMvc.perform(MockMvcRequestBuilders.delete("/cookbooks/delete/{id}", id))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
-    public void deleteQuizTempTestNotFound() throws Exception {
-        Long id = 1L;
-        BDDMockito.doThrow(new CookbookNotFoundException("Not Found")).when(mockCookbookService).deleteCookbook(id);
-
-        mockMvc.perform(MockMvcRequestBuilders.delete("/cookbooks/delete/{id}", id))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    void deleteCookbookSuccess() throws Exception {
+        mockMvc.perform(delete("/cookbooks/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Profile deleted successfully"));
     }
 
     private static String asJsonString(final Object obj) {

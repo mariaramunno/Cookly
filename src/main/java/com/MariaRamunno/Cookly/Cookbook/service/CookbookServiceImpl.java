@@ -30,15 +30,15 @@ public class CookbookServiceImpl implements CookbookService{
     }
 
     @Override
-    public Cookbook updateCookbook(Cookbook cookbook, Long id) {
-        return cookbookRepo.findById(id).map(st -> {
+    public Cookbook updateCookbook(Cookbook cookbook) {
+        Cookbook newCookbook = cookbookRepo.findById(cookbook.getId())
+                .orElseThrow(() -> new CookbookNotFoundException("Sorry, this cookbook could not be found."));
 
-            st.setTitle(cookbook.getTitle());
-            st.setRecipes(cookbook.getRecipes());
-            st.setId(cookbook.getId());
+            newCookbook.setTitle(cookbook.getTitle());
+            newCookbook.setRecipes(cookbook.getRecipes());
+            newCookbook.setId(cookbook.getId());
 
-            return cookbookRepo.save(st);
-        }).orElseThrow(() -> new CookbookNotFoundException("Sorry, this cookbook could not be found."));
+            return cookbookRepo.save(newCookbook);
     }
 
     @Override
