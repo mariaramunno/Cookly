@@ -18,6 +18,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -76,6 +79,18 @@ public class CookbookControllerTests {
         mockMvc.perform(delete("/cookbooks/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Profile deleted successfully"));
+    }
+
+    @Test
+    void getAllCookbooks() throws Exception {
+        List<Cookbook> cookbookList = Arrays.asList(new Cookbook(), new Cookbook());
+
+        when(mockCookbookService.getCookbooks()).thenReturn(cookbookList);
+
+        mockMvc.perform(get("/cookbooks"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(asJsonString(cookbookList)));
+
     }
 
     private static String asJsonString(final Object obj) {
