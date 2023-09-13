@@ -28,15 +28,11 @@ public class CookbookServiceTests {
     private Cookbook inputCookbook;
 
     private Cookbook mockCookbook1;
-    private Cookbook mockCookbook2;
 
     private Long id1;
-    private Long id2;
-
     @BeforeEach
     public void setUp(){
         id1 = 1L;
-        id2 = 2L;
         inputCookbook = new Cookbook();
         inputCookbook.setRecipes(Collections.emptySet());
         inputCookbook.setTitle("Title");
@@ -45,11 +41,6 @@ public class CookbookServiceTests {
         mockCookbook1.setId(id1);
         mockCookbook1.setTitle("Mock Example 1");
         mockCookbook1.setRecipes(Collections.emptySet());
-
-        mockCookbook2 = new Cookbook();
-        mockCookbook2.setId(id2);
-        mockCookbook2.setTitle("Mock Example 2");
-        mockCookbook2.setRecipes(Collections.emptySet());
     }
 
     @Test
