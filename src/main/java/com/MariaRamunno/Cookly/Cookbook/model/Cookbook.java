@@ -1,15 +1,10 @@
 package com.MariaRamunno.Cookly.Cookbook.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.MariaRamunno.Cookly.Recipe.model.Recipe;
+import jakarta.persistence.*;
+import lombok.*;
 
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,11 +12,9 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Cookbook {
-    private Set<Object> recipes;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private long id;
     private String title;
+    private List<Recipe> recipes;
 }

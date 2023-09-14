@@ -24,7 +24,7 @@ public class CookbookServiceImpl implements CookbookService{
     }
 
     @Override
-    public Cookbook getCookbookbyId(Long id) {
+    public Cookbook getCookbookbyId(long id) {
         return cookbookRepo.findById(id)
                 .orElseThrow(() -> new CookbookNotFoundException("No cookbook found with this id: " + id));
     }
@@ -36,13 +36,12 @@ public class CookbookServiceImpl implements CookbookService{
 
             newCookbook.setTitle(cookbook.getTitle());
             newCookbook.setRecipes(cookbook.getRecipes());
-            newCookbook.setId(cookbook.getId());
 
             return cookbookRepo.save(newCookbook);
     }
 
     @Override
-    public void deleteCookbook(Long id) {
+    public void deleteCookbook(long id) {
         if(!cookbookRepo.existsById(id)){
             throw new CookbookNotFoundException("Sorry, cookbook not found. ");
         }

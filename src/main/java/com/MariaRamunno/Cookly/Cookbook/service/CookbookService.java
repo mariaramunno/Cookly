@@ -8,7 +8,7 @@ import java.util.List;
 public interface CookbookService {
     Cookbook createCookbook(Cookbook cookbook);
     List<Cookbook> getCookbooks();
-    Cookbook getCookbookbyId(Long id);
+    Cookbook getCookbookbyId(long id);
     Cookbook updateCookbook(Cookbook cookbook);
-    void deleteCookbook(Long id);
+    void deleteCookbook(long id);
 }

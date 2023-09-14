@@ -11,13 +11,14 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
     private final UserRepo userRepo;
 
     @Override
     public User createUser(User user) {
-//        if (userAlreadyExists(user.getEmail())) {
-//            throw new UserAlreadyExistsException(user.getEmail() + " already exists!");
-//        }
+        if (userAlreadyExists(user.getEmail())) {
+            throw new UserAlreadyExistsException(user.getEmail() + " already exists!");
+        }
         return userRepo.save(user);
     }
 
@@ -27,25 +28,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserbyId(Long id) {
+    public User getUserbyId(long id) {
         return userRepo.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("No User found with this id: " + id));
     }
 
     @Override
-    public User updateUser(User user, Long id) {
-        return userRepo.findById(id).map(st -> {
+    public User updateUser(User user) {
+        User existingUser = userRepo.findById(user.getId())
+                .orElseThrow(() -> new UserNotFoundException("Sorry, this user could not be found."));
 
-            st.setFirstName(user.getFirstName());
-            st.setLastName(user.getLastName());
-            st.setEmail(user.getEmail());
+        existingUser.setFirstName(user.getFirstName());
+        existingUser.setLastName(user.getLastName());
+        existingUser.setEmail(user.getEmail());
 
-            return userRepo.save(st);
-        }).orElseThrow(() -> new UserNotFoundException("Sorry, this user could not be found."));
+        return userRepo.save(existingUser);
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void deleteUser(long id) {
         if (!userRepo.existsById(id)){
             throw new UserNotFoundException("Sorry, user not found.");
         }

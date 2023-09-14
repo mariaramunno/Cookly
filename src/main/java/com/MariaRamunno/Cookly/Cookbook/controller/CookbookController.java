@@ -30,19 +30,19 @@ public class CookbookController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Cookbook> updateCookbook(@RequestBody Cookbook cookbook) {
+    public ResponseEntity<Cookbook> updateCookbook(@PathVariable long id, @RequestBody Cookbook cookbook) {
         Cookbook updatedCookbook = cookbookService.updateCookbook(cookbook);
         return ResponseEntity.ok(updatedCookbook);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCookbook(@PathVariable Long id){
+    public ResponseEntity<String> deleteCookbook(@PathVariable long id){
         cookbookService.deleteCookbook(id);
-        return ResponseEntity.ok("Profile deleted successfully");
+        return ResponseEntity.ok("Cookbook deleted successfully");
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cookbook> getCookbookbyId(@PathVariable Long id){
+    public ResponseEntity<Cookbook> getCookbookbyId(@PathVariable long id){
         Cookbook cookbook = cookbookService.getCookbookbyId(id);
         return ResponseEntity.ok(cookbook);
     }

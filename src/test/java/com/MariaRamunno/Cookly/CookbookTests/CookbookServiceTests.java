@@ -1,20 +1,22 @@
 package com.MariaRamunno.Cookly.CookbookTests;
 
+import com.MariaRamunno.Cookly.Cookbook.exceptions.CookbookNotFoundException;
 import com.MariaRamunno.Cookly.Cookbook.model.Cookbook;
 import com.MariaRamunno.Cookly.Cookbook.repo.CookbookRepo;
 import com.MariaRamunno.Cookly.Cookbook.service.CookbookServiceImpl;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class CookbookServiceTests {
@@ -25,48 +27,69 @@ public class CookbookServiceTests {
     @InjectMocks
     private CookbookServiceImpl cookbookService;
 
-    private Cookbook inputCookbook;
+    @Test
+    void getAllCookbooks() {
+        List<Cookbook> cookbooks = Arrays.asList(new Cookbook(), new Cookbook());
+        when(cookbookRepo.findAll()).thenReturn(cookbooks);
 
-    private Cookbook mockCookbook1;
+        List<Cookbook> result = cookbookService.getCookbooks();
 
-    private Long id1;
-    @BeforeEach
-    public void setUp(){
-        id1 = 1L;
-        inputCookbook = new Cookbook();
-        inputCookbook.setRecipes(Collections.emptySet());
-        inputCookbook.setTitle("Title");
-
-        mockCookbook1 = new Cookbook();
-        mockCookbook1.setId(id1);
-        mockCookbook1.setTitle("Mock Example 1");
-        mockCookbook1.setRecipes(Collections.emptySet());
+        assertEquals(cookbooks, result);
     }
-
     @Test
     public void createCookbookSuccess() {
-        BDDMockito.doReturn(mockCookbook1).when(cookbookRepo).save(ArgumentMatchers.any());
+        Cookbook cookbook = new Cookbook();
+        when(cookbookRepo.save(cookbook)).thenReturn(cookbook);
 
-        Cookbook returnedCookbook = cookbookService.createCookbook(inputCookbook);
+        Cookbook result = cookbookService.createCookbook(cookbook);
 
-        Assertions.assertNotNull(returnedCookbook, "Cookbook should not be null");
+        assertEquals(cookbook, result);
     }
 
     @Test
     public void updateCookbookSuccess() {
-        BDDMockito.doReturn(Optional.of(mockCookbook1)).when(cookbookRepo).findById(1L);
+        long id = 1L;
+        Cookbook existingCookbook = new Cookbook();
+        existingCookbook.setId(id);
+        Cookbook updatedCookbook = new Cookbook();
+        updatedCookbook.setId(id);
+        when(cookbookRepo.findById(id)).thenReturn(Optional.of(existingCookbook));
+        when(cookbookRepo.save(existingCookbook)).thenReturn(updatedCookbook);
 
-        Cookbook updatedCookbook = cookbookService.updateCookbook(inputCookbook);
+        Cookbook result = cookbookService.updateCookbook(updatedCookbook);
 
-        Assertions.assertEquals(updatedCookbook, mockCookbook1);
+        assertEquals(updatedCookbook, result);
     }
 
     @Test
+    void updateCookbookNotFound() {
+        long id = 1L;
+        Cookbook updatedCookbook = new Cookbook();
+        updatedCookbook.setId(id);
+        when(cookbookRepo.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(CookbookNotFoundException.class, () -> {
+            cookbookService.updateCookbook(updatedCookbook);
+        });
+    }
+    @Test
     public void getCookbookByIdSuccess() {
-        BDDMockito.doReturn(Optional.of(mockCookbook1)).when(cookbookRepo).findById(id1);
+        Cookbook cookbook = new Cookbook();
+        long id = 1L;
+        when(cookbookRepo.findById(id)).thenReturn(Optional.of(cookbook));
 
-        Cookbook returnedCookbook = cookbookService.getCookbookbyId(id1);
+        Cookbook result = cookbookService.getCookbookbyId(id);
 
-        Assertions.assertEquals(returnedCookbook, mockCookbook1);
+        assertEquals(cookbook, result);
+    }
+
+    @Test
+    void getCookbookByIdNotFound() {
+        long id = 1L;
+        when(cookbookRepo.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(CookbookNotFoundException.class, () -> {
+            cookbookService.getCookbookbyId(id);
+        });
     }
 }
