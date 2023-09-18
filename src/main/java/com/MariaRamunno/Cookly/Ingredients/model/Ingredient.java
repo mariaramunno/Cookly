@@ -10,9 +10,11 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Ingredients {
+public class Ingredient {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
+
     private String title;
 }

@@ -84,6 +84,7 @@ public class CookbookControllerTests {
 
     @Test
     void deleteCookbookSuccess() throws Exception {
+
         mockMvc.perform(delete("/cookbooks/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Cookbook deleted successfully"));

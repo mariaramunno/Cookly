@@ -15,6 +15,7 @@ public class Steps {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String description;
 
         // Constructors, getters, setters, etc.
