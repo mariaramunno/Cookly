@@ -31,7 +31,9 @@ public class IngredientServiceImpl implements IngredientsService{
         Ingredient newIngredient = ingredientRepo.findById(ingredient.getId())
                 .orElseThrow(() -> new IngredientNotFoundException("Sorry, this ingredient could not be found."));
 
-        newIngredient.setTitle(ingredient.getTitle());
+        newIngredient.setName(ingredient.getName());
+        newIngredient.setUnit(ingredient.getUnit());
+        newIngredient.setQuantity(ingredient.getQuantity());
 
         return ingredientRepo.save(newIngredient);
     }

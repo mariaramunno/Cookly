@@ -1,4 +1,4 @@
-package com.MariaRamunno.Cookly.Ingredients.model;
+package com.MariaRamunno.Cookly.Steps.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -7,18 +7,15 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Ingredient {
+@Table(name = "steps")
+public class Steps {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    private String description;
+
     @Column(name = "recipe_id")
     private long recipe_id;
-
-    private String name;
-
-    private Integer quantity;
-
-    private String unit;
 }

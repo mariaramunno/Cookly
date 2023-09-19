@@ -11,6 +11,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "cookbook")
 public class Cookbook {
 
     @Id
@@ -20,7 +21,7 @@ public class Cookbook {
     private String title;
 
     @Column(name = "user_id")
-    private long userId;
+    private long user_id;
 
     @OneToMany
     @JoinColumn(name = "cookbook_id")

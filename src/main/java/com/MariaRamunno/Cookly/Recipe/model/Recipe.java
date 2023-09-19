@@ -1,6 +1,7 @@
 package com.MariaRamunno.Cookly.Recipe.model;
 
 import com.MariaRamunno.Cookly.Ingredients.model.Ingredient;
+import com.MariaRamunno.Cookly.Steps.model.Steps;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,6 +13,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "recipe")
 public class Recipe {
 
     @Id
@@ -21,12 +23,13 @@ public class Recipe {
     private double cooktime;
 
     @Column(name = "cookbook_id")
-    private long cookbookId;
+    private long cookbook_id;
 
     @OneToMany
+    @JoinColumn(name = "recipe_id")
     private List<Steps> steps;
 
-    private Integer rate;
+    private double rate;
 
     //@ElementCollection
     @OneToMany
