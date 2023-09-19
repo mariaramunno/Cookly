@@ -67,10 +67,10 @@ public class IngredientControllerTests {
     void updateIngredientSuccess() throws Exception {
         Ingredient updateIngredient = new Ingredient();
         updateIngredient.setId(1L);
-        updateIngredient.setTitle("updated");
+        updateIngredient.setName("updated");
 
         Ingredient newIngredient = new Ingredient();
-        newIngredient.setTitle("test");
+        newIngredient.setName("test");
 
         when(ingredientsService.updateIngredient(any())).thenReturn(updateIngredient);
 

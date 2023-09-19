@@ -1,7 +1,5 @@
 package com.MariaRamunno.Cookly.UserTests;
 
-import com.MariaRamunno.Cookly.Cookbook.exceptions.CookbookNotFoundException;
-import com.MariaRamunno.Cookly.Cookbook.model.Cookbook;
 import com.MariaRamunno.Cookly.User.exceptions.UserAlreadyExistsException;
 import com.MariaRamunno.Cookly.User.exceptions.UserNotFoundException;
 import com.MariaRamunno.Cookly.User.model.User;
@@ -47,6 +45,21 @@ public class UserServiceTests {
         User result = userService.createUser(user);
 
         assertEquals(user, result);
+    }
+
+    @Test
+    void userAlreadyExists() {
+        User testUser = new User();
+        testUser.setEmail("email");
+        when(userRepo.save(testUser)).thenThrow(new UserAlreadyExistsException("User already exists"));
+
+        User user = new User();
+        user.setEmail("email");
+
+        assertThrows(UserAlreadyExistsException.class, () -> {
+            userService.createUser(testUser);
+            userService.createUser(user);
+        });
     }
 
     @Test
