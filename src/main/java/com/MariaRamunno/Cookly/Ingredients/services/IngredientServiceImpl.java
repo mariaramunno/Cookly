@@ -3,12 +3,9 @@ package com.MariaRamunno.Cookly.Ingredients.services;
 import com.MariaRamunno.Cookly.Ingredients.exceptions.IngredientNotFoundException;
 import com.MariaRamunno.Cookly.Ingredients.model.Ingredient;
 import com.MariaRamunno.Cookly.Ingredients.repo.IngredientRepo;
-import com.MariaRamunno.Cookly.Recipe.exceptions.RecipeNotFoundException;
-import com.MariaRamunno.Cookly.Recipe.model.Recipe;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service

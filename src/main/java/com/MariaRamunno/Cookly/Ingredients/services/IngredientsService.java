@@ -1,8 +1,6 @@
 package com.MariaRamunno.Cookly.Ingredients.services;
 
 import com.MariaRamunno.Cookly.Ingredients.model.Ingredient;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
